@@ -1,13 +1,11 @@
-import "./App.css";
-import { Button } from "./components/ui/button";
+import HeaderComponent from "./components/ui/Header";
 
-function App() {
+const App = () => {
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <Button> Click me</Button>
+      <HeaderComponent />
     </div>
   );
-}
+};
 
 export default App;

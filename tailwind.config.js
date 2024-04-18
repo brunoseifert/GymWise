@@ -6,7 +6,6 @@ export const content = [
   "./app/**/*.{ts,tsx}",
   "./src/**/*.{ts,tsx}",
 ];
-export const prefix = "";
 export const theme = {
   container: {
     center: true,
@@ -16,6 +15,10 @@ export const theme = {
     },
   },
   extend: {
+    backgroundImage: {
+      "category-item-gradient":
+        "linear-gradient(45deg, #5033C3 0%, rgba(80, 51, 195, 0.20) 100%);",
+    },
     colors: {
       border: "hsl(var(--border))",
       input: "hsl(var(--input))",
@@ -58,12 +61,12 @@ export const theme = {
     },
     keyframes: {
       "accordion-down": {
-        from: { height: "0" },
+        from: { height: 0 },
         to: { height: "var(--radix-accordion-content-height)" },
       },
       "accordion-up": {
         from: { height: "var(--radix-accordion-content-height)" },
-        to: { height: "0" },
+        to: { height: 0 },
       },
     },
     animation: {
