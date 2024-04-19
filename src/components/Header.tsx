@@ -8,19 +8,19 @@ import {
   MenuIcon,
 } from "lucide-react";
 
-import { Button } from "./button";
+import { Button } from "./ui/button";
 import {
   Sheet,
   SheetClose,
   SheetContent,
   SheetHeader,
   SheetTrigger,
-} from "./sheet";
-import { Separator } from "./separator";
+} from "./ui/sheet";
+import { Separator } from "./ui/separator";
 
 const HeaderComponent = () => {
   return (
-    <div className="flex flex-row justify-between container mt-4 ">
+    <div className="flex flex-row justify-between items-center container pt-6 pb-6 ">
       <h1 className="uppercase text-xl font-semibold text-purple-200">
         <span className="text-purple-600 ">Gym </span>
         Wise
