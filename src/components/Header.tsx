@@ -20,15 +20,11 @@ import { Separator } from "./ui/separator";
 
 const HeaderComponent = () => {
   return (
-    <div className="flex flex-row justify-between items-center container pt-6 pb-6 ">
-      <h1 className="uppercase text-xl font-semibold text-purple-200">
-        <span className="text-purple-600 ">Gym </span>
-        Wise
-      </h1>
+    <div className="flex flex-row justify-end items-center pt-6 pb-6 ">
       <Sheet>
         <SheetTrigger>
           <Button size="icon" variant="outline">
-            <MenuIcon className="text-purple-50" />
+            <MenuIcon className="text-white" />
           </Button>
         </SheetTrigger>
         <SheetContent side="right">
@@ -36,7 +32,7 @@ const HeaderComponent = () => {
             Menu
           </SheetHeader>
           <Separator className=" w-full opacity-15" />
-          <div className="flex flex-col  text-purple-50 p-6">
+          <div className="flex flex-col  text-white p-6">
             <SheetClose>
               <Button
                 size="icon"

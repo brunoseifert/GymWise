@@ -1,12 +1,13 @@
 import { formatDate } from "date-fns";
-import HeaderComponent from "./components/Header";
-import { Separator } from "./components/ui/separator";
+import HeaderComponent from "../components/Header";
+import { Separator } from "../components/ui/separator";
 import { ptBR } from "date-fns/locale/pt-BR";
-import { Input } from "./components/ui/input";
-import { Button } from "./components/ui/button";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
 import { Search } from "lucide-react";
-import WorkoutDay from "./components/WokoutDay";
-import WorkoutNextItem from "./components/WorkoutNext";
+import WorkoutDay from "../components/WokoutDay";
+import WorkoutNextItem from "../components/WorkoutNext";
+import RatingItem from "../components/Rating";
 
 const Home = () => {
   const currentDate = new Date();
@@ -17,11 +18,17 @@ const Home = () => {
 
   return (
     <div>
-      <HeaderComponent />
       <div className="container flex flex-col">
+        <div className="flex items-center justify-between">
+          <h1 className=" text-xl font-semibold text-grayThree ">
+            <span className="text-primaryPurple uppercase">Gym </span>
+            Wise
+          </h1>
+          <HeaderComponent />
+        </div>
         <Separator className="opacity-15" />
 
-        <div className=" text-purple-50 pt-6 pb-6">
+        <div className=" text-white pt-6 pb-6">
           <h1 className="text-xl font-light">
             Olá!, <strong>Bruno!</strong>
           </h1>
@@ -49,8 +56,13 @@ const Home = () => {
         <h4 className="uppercase text-grayThree text-xs mt-6 mb-4 ml-1">
           próximos treinos
         </h4>
-
         <WorkoutNextItem />
+
+        <h4 className="uppercase text-grayThree text-xs mt-6 mb-4 ml-1">
+          Avaliações
+        </h4>
+
+        <RatingItem />
       </div>
     </div>
   );
