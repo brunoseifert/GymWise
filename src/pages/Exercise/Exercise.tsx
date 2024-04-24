@@ -5,33 +5,22 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronLeft, Star } from "lucide-react";
 import { Link } from "react-router-dom";
-
-const workouts = [
-  {
-    title: "Supino Reto",
-    image: "/images/peito.png",
-    bodyPart: "Carga: 10kg",
-  },
-  {
-    title: "Supino Inclinado",
-    image: "/images/pernas.png",
-    bodyPart: "Carga: 10kg",
-  },
-
-  {
-    title: "Supino Declinado",
-    image: "/images/ombro.png",
-    bodyPart: "Carga: 10kg",
-  },
-
-  {
-    title: "Crucifixo Reto",
-    image: "/images/peito.png",
-    bodyPart: "Carga: 10kg",
-  },
-];
+import { Item, getAllExercises } from "@/controllers/exerciseController";
+import { useEffect, useState } from "react";
+import YouTube from "react-youtube";
 
 const ExercisePage = () => {
+  const [workouts, setWorkouts] = useState<Item[]>([]);
+
+  useEffect(() => {
+    getAllExercises().then((data) => setWorkouts(data.items));
+  }, []);
+
+  const extractVideoId = (url: string) => {
+    const match = url.match(/youtu\.be\/([^&]+)/);
+    return match ? match[1] : "";
+  };
+
   return (
     <div className="container">
       <div className="flex flex-col">
@@ -70,24 +59,22 @@ const ExercisePage = () => {
                   <Card className="bg-secondaryBlack border-grayOne text-white ">
                     <CardContent className="grid grid-cols-3 p-2">
                       <div className="flex py-5">
-                        <img
-                          src={workout.image}
-                          width={140}
-                          height={110}
-                          alt={workout.title}
+                        <YouTube
+                          videoId={extractVideoId(workout.urlVideo)}
+                          opts={{ width: "100%", height: "100%" }}
                         />
                       </div>
                       <div className="grid col-span-2 pl-4">
                         <div className="flex-col items-center text-left">
-                          <h2 className="font-bold">{workout.title}</h2>
+                          <h2 className="font-bold">{workout.name}</h2>
                           <p className="text-[12px] font-light text-grayThree">
-                            {workout.bodyPart}
+                            {workout.name}
                           </p>
                         </div>
                         <div className="flex items-center w-full justify-between">
-                          <span className="text-primaryPurple font-semibold">
-                            10x Rep
-                          </span>
+                          <p className="text-primaryPurple font-semibold">
+                            10 Repetições
+                          </p>
                           <Button
                             className=" bg-grayOne items-center"
                             variant="outline"
