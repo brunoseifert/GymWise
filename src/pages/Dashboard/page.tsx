@@ -92,7 +92,7 @@ const DashboardPage = () => {
           variant="outline"
           className="bg-primaryPurple text-white p-2 pl-4 pr-4 rounded-xl ml-auto"
         >
-          Cadastrar
+          <a href="/dashboard/register">Cadastrar</a>
         </Button>
       </div>
       <div className="px-4 ">

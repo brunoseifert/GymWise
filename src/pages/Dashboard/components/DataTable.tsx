@@ -36,47 +36,17 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-const data: Payment[] = [
-  {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
-  },
-  {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
-  },
-  {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
-  },
-  {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
-  },
-  {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
-  },
-];
-
-export type Payment = {
+export type Student = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
+  firstName: string;
+  lastName: string;
   email: string;
+  cellPhone: string;
+  dateOfBirth: string;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+// eslint-disable-next-line react-refresh/only-export-components
+export const columns: ColumnDef<Student>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -109,33 +79,38 @@ export const columns: ColumnDef<Payment>[] = [
     ),
   },
   {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+    accessorKey: "Nome Completo",
+    header: "Nome Completo",
+    cell: ({ row }) => (
+      <div>{`${row.original.firstName} ${row.original.lastName}`}</div>
+    ),
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "email",
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Email
+        <ArrowUpDown className="ml-2 h-4 w-4" />
+      </Button>
+    ),
+    cell: ({ row }) => <div>{row.original.email}</div>,
+  },
+  {
+    accessorKey: "Celular",
+    header: () => <div className="text-right">Celular</div>,
+    cell: ({ row }) => (
+      <div className="text-right">{row.getValue("cellPhone")}</div>
+    ),
+  },
+  {
+    accessorKey: "Aniversário",
+    header: "Aniversário",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      const date = new Date(row.getValue("dateOfBirth"));
+      return <div>{date.toLocaleDateString()}</div>;
     },
   },
   {
@@ -170,6 +145,9 @@ export const columns: ColumnDef<Payment>[] = [
 ];
 
 export function DataTableDemo() {
+  const [data, setData] = React.useState<Student[]>([]);
+  const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -177,6 +155,26 @@ export function DataTableDemo() {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+
+  React.useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("http://localhost:5099/api/v1/students");
+        if (!response.ok) {
+          throw new Error("Erro ao buscar os dados da API");
+        }
+        const data = await response.json();
+        setData(data);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   const table = useReactTable({
     data,
@@ -197,21 +195,31 @@ export function DataTableDemo() {
     },
   });
 
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
     <div className="w-full bg-transparent text-white">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filtrar por email..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Buscar por nome..."
+          value={
+            (table.getColumn("Nome Completo")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("Nome Completo")?.setFilterValue(event.target.value)
           }
           className="max-w-sm text-grayOne"
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
+              Filtros <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -235,7 +243,7 @@ export function DataTableDemo() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="rounded-md border ">
+      <div className="rounded-md border border-white/10">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -261,6 +269,7 @@ export function DataTableDemo() {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="hover:bg-grayOne/10 transition-colors data-[state=checked]:bg-grayOne/10"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="backdrop-filter-none">
@@ -278,7 +287,7 @@ export function DataTableDemo() {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Sem resultados
                 </TableCell>
               </TableRow>
             )}
@@ -287,8 +296,8 @@ export function DataTableDemo() {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length} de{" "}
+          {table.getFilteredRowModel().rows.length} Alunos Selecionados.
         </div>
         <div className="space-x-2">
           <Button
@@ -297,7 +306,7 @@ export function DataTableDemo() {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Anterior
           </Button>
           <Button
             variant="outline"
@@ -305,7 +314,7 @@ export function DataTableDemo() {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Próximo
           </Button>
         </div>
       </div>
