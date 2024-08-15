@@ -19,15 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-export type Student = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  cellPhone: string;
-  dateOfBirth: string;
-};
+import { Student } from "@/services/studentService";
 
 export function DataTableDemo() {
   const [data, setData] = React.useState<Student[]>([]);
@@ -42,7 +34,7 @@ export function DataTableDemo() {
           throw new Error("Failed to fetch data");
         }
         const data = await response.json();
-        setData(data.items); // Assuming 'items' is the correct format from API
+        setData(data.items);
       } catch (error) {
         setError(error instanceof Error ? error.message : String(error));
       } finally {
@@ -101,7 +93,7 @@ export function DataTableDemo() {
               </TableHead>
               <TableHead className="text-right">Celular</TableHead>
               <TableHead>Aniversário</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>Opções</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -113,7 +105,9 @@ export function DataTableDemo() {
                 <TableCell className="text-right">
                   {student.cellPhone}
                 </TableCell>
-                <TableCell>{student.dateOfBirth}</TableCell>
+                <TableCell>
+                  {new Date(student.dateOfBirth).toLocaleDateString()}
+                </TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -123,7 +117,9 @@ export function DataTableDemo() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                      <DropdownMenuLabel>
+                        <a href="/workout">Criar treino</a>
+                      </DropdownMenuLabel>
                       <DropdownMenuItem>Copy Student ID</DropdownMenuItem>
                       <DropdownMenuItem>View Details</DropdownMenuItem>
                     </DropdownMenuContent>

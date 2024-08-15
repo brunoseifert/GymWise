@@ -8,8 +8,29 @@ import { Search } from "lucide-react";
 import WorkoutDay from "../components/WokoutDay";
 import WorkoutNextItem from "../components/WorkoutNext";
 import RatingItem from "../components/Rating";
+import { Student } from "@/services/studentService";
+import React from "react";
 
 const Home = () => {
+  const [students, setStudents] = React.useState<Student[]>([]);
+
+  React.useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("http://localhost:5099/api/v1/students");
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data = await response.json();
+        setStudents(data.items);
+      } catch (error) {
+        console.error("Failed to fetch data:", error);
+      }
+    }
+
+    fetchData();
+  }, []);
+
   const currentDate = new Date();
   const formattedDate = formatDate(currentDate, "d 'de' MMMM", {
     locale: ptBR,
@@ -30,10 +51,15 @@ const Home = () => {
 
         <div className=" text-white pt-6 pb-6">
           <h1 className="text-xl font-light">
-            Olá!, <strong>Bruno!</strong>
+            Olá!,{" "}
+            <strong>
+              {students.length > 0
+                ? students[0].firstName.split(" ")[0]
+                : "Visitante"}
+            </strong>
           </h1>
           <p className="text-sm font-light">
-            <span className="capitalize">{formatteDay}</span>, {formattedDate}
+            <span className="capitalize">{formatteDay}</span> {formattedDate}
           </p>
         </div>
 
