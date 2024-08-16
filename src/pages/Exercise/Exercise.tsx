@@ -11,7 +11,7 @@ import { getStudentWorkouts, Workout } from "@/services/workoutService";
 
 const ExercisePage = () => {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const studentId = "445c095e-2f3c-4ae8-ae67-95db6fefacff"; // Altere conforme necessário
+  const studentId = "445c095e-2f3c-4ae8-ae67-95db6fefacff";
 
   useEffect(() => {
     getStudentWorkouts(studentId).then((data) => setWorkouts(data));
@@ -63,10 +63,15 @@ const ExercisePage = () => {
                       <div className="max-w-full mb-4">
                         <Card className="bg-secondaryBlack border-grayOne text-white">
                           <CardContent className="flex flex-col">
-                            <div className="flex py-5">
+                            <div className="flex py-5 ">
                               <YouTube
                                 videoId={extractVideoId(set.exercise.urlVideo)}
-                                opts={{ width: "100%", height: "100%" }}
+                                className="w-full h-full"
+                                opts={{
+                                  width: "100%",
+                                  height: "100%",
+                                  playerVars: { autoplay: 0 },
+                                }}
                               />
                             </div>
                             <div className="grid col-span-2 pl-4">
@@ -80,7 +85,7 @@ const ExercisePage = () => {
                               </div>
                               <div className="flex items-center justify-between mt-4">
                                 <Button
-                                  className="bg-grayOne text-white"
+                                  className="bg-grayOne text-white w-full"
                                   variant="outline"
                                 >
                                   Concluir

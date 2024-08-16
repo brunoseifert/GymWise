@@ -40,7 +40,7 @@ const HeaderComponent = () => {
                 className="w-full justify-start gap-2 bg-[#26272B]"
               >
                 <LogInIcon className="" />
-                Login
+                <a href="/login">Login</a>
               </Button>
             </SheetClose>
             <SheetClose>

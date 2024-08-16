@@ -4,12 +4,14 @@ import ExercisePage from "./pages/Exercise/Exercise";
 import RatingPage from "./pages/Rating/Rating";
 import DashboardPage from "./pages/Dashboard/page";
 import RegisterStudents from "./pages/Dashboard/register/page";
+import LoginPage from "./pages/login/Login";
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/exercises" element={<ExercisePage />} />
         <Route path="/rating" element={<RatingPage />} />
         <Route path="/dashboard" element={<DashboardPage />} />

@@ -5,8 +5,17 @@ import { Card, CardContent } from "./ui/card";
 import { Sheet, SheetTrigger } from "./ui/sheet";
 import { formatDate } from "date-fns";
 import { Link } from "react-router-dom";
+import { getStudentWorkouts, Workout } from "@/services/workoutService";
+import { useEffect, useState } from "react";
 
 const WorkoutDay = () => {
+  const [workouts, setWorkouts] = useState<Workout[]>([]);
+  const studentId = "445c095e-2f3c-4ae8-ae67-95db6fefacff";
+
+  useEffect(() => {
+    getStudentWorkouts(studentId).then((data) => setWorkouts(data));
+  }, []);
+
   const currentDate = new Date();
   const formattedDay = formatDate(currentDate, "d", {
     locale: ptBR,
@@ -23,10 +32,21 @@ const WorkoutDay = () => {
             <Card className="min-w-full bg-secondaryBlack border-grayOne text-white">
               <CardContent className="py-0 flex px-0">
                 <div className="flex flex-col gap-2 py-5 flex-[3] pl-5">
-                  <Badge className="w-fit relative -left-1.5 bg-darkPurple text-primaryPurple">
-                    Treino A
-                  </Badge>
-                  <h2 className="font-bold text-left">Peito</h2>
+                  {workouts.length > 0 ? (
+                    workouts.map((workout) => (
+                      <div
+                        key={workout.id}
+                        className="flex flex-col items-left justify-start gap-2"
+                      >
+                        <Badge className="bg-primaryPurple text-white p-1 rounded-xl w-fit">
+                          {workout.workoutRoutine.title.value}
+                        </Badge>
+                        <p className="text-sm text-left">{workout.title}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm">Sem treinos para hoje</p>
+                  )}
 
                   <div className="flex items-center gap-2">
                     <Avatar className="h-6 w-6">
@@ -34,7 +54,7 @@ const WorkoutDay = () => {
                       <AvatarFallback></AvatarFallback>
                     </Avatar>
                     <h3 className="text-sm font-light">
-                      <p>Treinador Jhonathan</p>
+                      <p>Treinador Jonathan</p>
                     </h3>
                   </div>
                 </div>
