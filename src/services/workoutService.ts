@@ -46,16 +46,17 @@ export interface Workout {
   id: string;
 }
 
-const API_URL = "http://localhost:5099/api/v1";
-
 export const getAllWorkouts = async (): Promise<Workout[]> => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.get(`${API_URL}/workouts`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/workouts`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Erro ao buscar treinos:", error);
@@ -68,11 +69,15 @@ export const createWorkout = async (
 ): Promise<Workout> => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.post(`${API_URL}/workouts`, workout, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/workouts`,
+      workout,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     console.error("Erro ao criar treino:", error);
@@ -87,7 +92,7 @@ export const createWorkoutRoutine = async (
   const token = localStorage.getItem("token");
   try {
     await axios.post(
-      `${API_URL}/workouts/${workoutId}/routines`,
+      `${import.meta.env.VITE_API_URL}/workouts/${workoutId}/routines`,
       { exerciseId },
       {
         headers: {
@@ -107,7 +112,7 @@ export const getStudentWorkouts = async (
   const token = localStorage.getItem("token");
   try {
     const response = await axios.get(
-      `${API_URL}/workouts/student/${studentId}`,
+      `${import.meta.env.VITE_API_URL}/workouts/student/${studentId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

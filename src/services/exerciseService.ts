@@ -19,11 +19,11 @@ export interface Item {
   id: string;
 }
 
-const API_URL = "http://localhost:5099/api/v1/exercises";
-
 export const getAllExercises = async (): Promise<PageApp> => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/exercises`
+    );
     console.log(response.data);
     return response.data;
   } catch (error) {
