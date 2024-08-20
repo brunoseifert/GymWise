@@ -37,7 +37,6 @@ const Home: React.FC = () => {
     fetchData();
   }, []);
 
-  // Formatação da data
   const currentDate = new Date();
   const formattedDate = formatDate(currentDate, "d 'de' MMMM", {
     locale: ptBR,
