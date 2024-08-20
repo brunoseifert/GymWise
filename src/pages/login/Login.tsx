@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { authenticateUser } from "@/services/authService";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -9,25 +10,10 @@ const LoginPage = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const response = await fetch(
-        "http://localhost:5099/api/v1/auth/authenticate",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
-      const data = await response.json();
-      const token = data.token; // Supondo que o token seja retornado na resposta
-      sessionStorage.setItem("token", token); // Armazena o token
-      navigate("/"); // Redireciona o usuário para a página inicial
+      const data = await authenticateUser(email, password);
+      const userEmail = data.email;
+      sessionStorage.setItem("userEmail", userEmail);
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error);
     }
