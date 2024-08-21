@@ -12,8 +12,29 @@ import {
 } from "@/components/ui/popover";
 import { ptBR } from "date-fns/locale";
 
-export function DatePickerPopUp() {
-  const [date, setDate] = React.useState<Date>();
+interface DatePickerPopUpProps {
+  placeholder?: string;
+  id?: string;
+  value?: Date;
+  onChange?: (date: Date | undefined) => void;
+  className?: string;
+}
+
+export function DatePickerPopUp({
+  placeholder = "Selecione",
+  id,
+  value,
+  onChange,
+  className,
+}: DatePickerPopUpProps) {
+  const [date, setDate] = React.useState<Date | undefined>(value);
+
+  const handleSelect = (selectedDate: Date | undefined) => {
+    setDate(selectedDate);
+    if (onChange) {
+      onChange(selectedDate);
+    }
+  };
 
   return (
     <Popover>
@@ -22,14 +43,16 @@ export function DatePickerPopUp() {
           variant={"outline"}
           className={cn(
             "w-[280px] justify-start text-left text-white bg-grayOne max-w-fit font-normal",
-            !date && "text-muted-foreground"
+            !date && "text-muted-foreground",
+            className
           )}
+          id={id}
         >
           <CalendarIcon className="mr-2 h-4 w-4 text-white" />
           {date ? (
             format(date, "PPP", { locale: ptBR })
           ) : (
-            <span className="text-white">Selecione</span>
+            <span className="text-white">{placeholder}</span>
           )}
         </Button>
       </PopoverTrigger>
@@ -38,8 +61,9 @@ export function DatePickerPopUp() {
           locale={ptBR}
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={handleSelect}
           initialFocus
+          required
         />
       </PopoverContent>
     </Popover>

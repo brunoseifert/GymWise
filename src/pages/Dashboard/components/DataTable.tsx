@@ -1,7 +1,5 @@
 import * as React from "react";
-
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -63,7 +61,6 @@ export function DataTableDemo() {
         <Input
           placeholder="Search by name..."
           className="max-w-sm text-grayOne"
-          // Placeholder for search functionality
         />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -72,7 +69,6 @@ export function DataTableDemo() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {/* Placeholder for filter options */}
             <DropdownMenuLabel>Filter Options</DropdownMenuLabel>
             <DropdownMenuItem>Option 1</DropdownMenuItem>
             <DropdownMenuItem>Option 2</DropdownMenuItem>
@@ -118,9 +114,11 @@ export function DataTableDemo() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuLabel>
-                        <a href="/workout">Criar treino</a>
+                        <a href={`/dashboard/routine?studentId=${student.id}`}>
+                          Criar rotina
+                        </a>
                       </DropdownMenuLabel>
-                      <DropdownMenuItem>Copy Student ID</DropdownMenuItem>
+                      <DropdownMenuItem>Ver treinos</DropdownMenuItem>
                       <DropdownMenuItem>View Details</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

@@ -11,11 +11,11 @@ import { getStudentWorkouts, Workout } from "@/services/workoutService";
 
 const ExercisePage = () => {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const studentId = "445c095e-2f3c-4ae8-ae67-95db6fefacff";
+  const studentId = import.meta.env.VITE_STUDENT_ID as string;
 
   useEffect(() => {
     getStudentWorkouts(studentId).then((data) => setWorkouts(data));
-  }, []);
+  }, [studentId]);
 
   const extractVideoId = (url: string) => {
     const match = url.match(/youtu\.be\/([^&]+)/);

@@ -56,7 +56,7 @@ const Home: React.FC = () => {
         <Separator className="opacity-15" />
 
         <div className="text-white pt-6 pb-6">
-          <div>{userEmail ? `Olá, ${userEmail}` : "Olá, usuário!"}</div>
+          <div>{userEmail ? `Olá, ${userEmail}` : "Faça login!"}</div>
           <p className="text-sm font-light">
             <span className="capitalize">{formattedDay}</span> {formattedDate}
           </p>

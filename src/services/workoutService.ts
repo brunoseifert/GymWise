@@ -64,48 +64,6 @@ export const getAllWorkouts = async (): Promise<Workout[]> => {
   }
 };
 
-export const createWorkout = async (
-  workout: Omit<Workout, "id">
-): Promise<Workout> => {
-  const token = localStorage.getItem("token");
-  try {
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/workouts`,
-      workout,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    return response.data;
-  } catch (error) {
-    console.error("Erro ao criar treino:", error);
-    throw error;
-  }
-};
-
-export const createWorkoutRoutine = async (
-  workoutId: string,
-  exerciseId: string
-): Promise<void> => {
-  const token = localStorage.getItem("token");
-  try {
-    await axios.post(
-      `${import.meta.env.VITE_API_URL}/workouts/${workoutId}/routines`,
-      { exerciseId },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-  } catch (error) {
-    console.error("Erro ao adicionar exercício ao treino:", error);
-    throw error;
-  }
-};
-
 export const getStudentWorkouts = async (
   studentId: string
 ): Promise<Workout[]> => {
