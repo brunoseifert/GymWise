@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authenticateUser } from "@/services/authService";
+import { useAuth } from "@/contexts/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth(); // Usando o contexto de autenticação
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      const data = await authenticateUser(email, password);
-      const userEmail = data.email;
-      sessionStorage.setItem("userEmail", userEmail);
-      navigate("/");
+      await login(email, password); // Utilizando a função login do contexto
+      navigate("/"); // Redireciona para a página inicial após login bem-sucedido
     } catch (error) {
       console.error("Login error:", error);
     }

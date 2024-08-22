@@ -6,20 +6,26 @@ import DashboardPage from "./pages/Dashboard/page";
 import RegisterStudents from "./pages/Dashboard/register/page";
 import LoginPage from "./pages/login/Login";
 import CreateWorkoutPage from "./pages/Dashboard/WorkoutRotine/page";
+import { AuthProvider } from "./contexts/AuthContext";
+import PrivateRoute from "./contexts/Components/PrivateRoute";
 
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/exercises" element={<ExercisePage />} />
-        <Route path="/rating" element={<RatingPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/dashboard/register" element={<RegisterStudents />} />
-        <Route path="/dashboard/routine" element={<CreateWorkoutPage />} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route element={<PrivateRoute />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/exercises" element={<ExercisePage />} />
+            <Route path="/rating" element={<RatingPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/dashboard/register" element={<RegisterStudents />} />
+            <Route path="/dashboard/routine" element={<CreateWorkoutPage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 };
 
