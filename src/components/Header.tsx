@@ -18,21 +18,15 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import { Separator } from "./ui/separator";
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-
-  useEffect(() => {
-    const userEmail = sessionStorage.getItem("userEmail");
-    setIsLoggedIn(!!userEmail); // Define se o usuário está logado com base na presença do email
-  }, []);
+  const { user, logout } = useAuth(); // Utilize o contexto de autenticação
 
   const handleLogout = () => {
-    sessionStorage.removeItem("userEmail");
-    setIsLoggedIn(false); // Atualiza o estado de autenticação
+    logout(); // Chama a função de logout do contexto
     navigate("/login"); // Navega para a página de login
   };
 
@@ -54,7 +48,7 @@ const HeaderComponent = () => {
           </SheetHeader>
           <Separator className="w-full opacity-15" />
           <div className="flex flex-col text-white p-6">
-            {isLoggedIn ? (
+            {user ? (
               <>
                 <SheetClose>
                   <Button

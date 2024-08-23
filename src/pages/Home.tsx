@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { format as formatDate } from "date-fns";
 import HeaderComponent from "../components/Header";
 import { Separator } from "../components/ui/separator";
@@ -9,33 +9,10 @@ import { Search } from "lucide-react";
 import WorkoutDay from "../components/WokoutDay";
 import WorkoutNextItem from "../components/WorkoutNext";
 import RatingItem from "../components/Rating";
+import { useAuth } from "../contexts/AuthContext";
 
 const Home: React.FC = () => {
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const email = sessionStorage.getItem("userEmail");
-
-        if (!token) {
-          throw new Error("Token não encontrado. Por favor, faça login.");
-        }
-
-        if (!email) {
-          throw new Error(
-            "Email do usuário não encontrado. Por favor, faça login."
-          );
-        }
-
-        setUserEmail(email);
-      } catch (error) {
-        console.error("Erro ao buscar usuário logado:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  const { user } = useAuth();
 
   const currentDate = new Date();
   const formattedDate = formatDate(currentDate, "d 'de' MMMM", {
@@ -56,7 +33,7 @@ const Home: React.FC = () => {
         <Separator className="opacity-15" />
 
         <div className="text-white pt-6 pb-6">
-          <div>{userEmail ? `Olá, ${userEmail}` : "Faça login!"}</div>
+          <div>{user ? `Olá, ${user.email}` : "Faça login!"}</div>
           <p className="text-sm font-light">
             <span className="capitalize">{formattedDay}</span> {formattedDate}
           </p>

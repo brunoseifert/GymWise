@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { authenticateUser } from "../services/authService";
 
 interface User {
@@ -18,10 +24,21 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
+  useEffect(() => {
+    // Tenta carregar o usuário do localStorage quando o componente for montado
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   const login = async (email: string, password: string) => {
     try {
       const data = await authenticateUser(email, password);
-      setUser({ id: data.userId, email: data.email });
+      const userData = { id: data.userId, email: data.email };
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData)); // Salva o usuário no localStorage
+      localStorage.setItem("token", data.token); // Armazena o token também, se necessário
     } catch (error) {
       console.error("Falha no login:", error);
     }
@@ -29,6 +46,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setUser(null);
+    localStorage.removeItem("user");
     localStorage.removeItem("token");
   };
 
