@@ -18,6 +18,39 @@ export type StudentsResponse = {
   hasPreviousPage: boolean;
 };
 
+export const registerStudent = async (student: Omit<Student, "id">) => {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("Token não encontrado no localStorage.");
+  }
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_API_URL}/students/register`,
+      student,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error(
+        "Erro ao registrar aluno:",
+        error.response?.data || error.message
+      );
+    } else {
+      console.error("Erro inesperado:", error);
+    }
+    throw error;
+  }
+};
+
 export const getAllStudents = async (): Promise<StudentsResponse> => {
   const token = localStorage.getItem("token");
 

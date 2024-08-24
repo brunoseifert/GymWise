@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 export interface WorkoutRoutine {
   title: string;
@@ -7,16 +7,14 @@ export interface WorkoutRoutine {
   inactiveOnExpiration: boolean;
   startDate: string;
   expirationDate: string;
-  studentId: string;
 }
 
-const studentId = import.meta.env.VITE_STUDENT_ID;
-
 export const createWorkoutRoutine = async (
-  workoutData: Omit<WorkoutRoutine, "studentId">
-) => {
+  workoutData: WorkoutRoutine,
+  studentId: string
+): Promise<void> => {
   try {
-    const response = await axios.post(
+    const response: AxiosResponse<void> = await axios.post(
       `${import.meta.env.VITE_API_URL}/workouts/rotines`,
       {
         ...workoutData,
@@ -27,9 +25,17 @@ export const createWorkoutRoutine = async (
     if (response.status === 204) {
       console.log("Treino criado com sucesso");
     } else {
-      console.log("Erro ao criar o treino", response.data);
+      console.error(
+        "Erro ao criar o treino:",
+        response.status,
+        response.statusText
+      );
     }
   } catch (error) {
-    console.error("Erro ao criar o treino:", error);
+    if (axios.isAxiosError(error)) {
+      console.error("Erro ao criar o treino:", error.message || error);
+    } else {
+      console.error("Erro inesperado:", error);
+    }
   }
 };
