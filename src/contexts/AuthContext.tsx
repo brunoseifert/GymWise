@@ -37,8 +37,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await authenticateUser(email, password);
       const userData = { id: data.userId, email: data.email };
       setUser(userData);
-      localStorage.setItem("user", JSON.stringify(userData)); // Salva o usuário no localStorage
-      localStorage.setItem("token", data.token); // Armazena o token também, se necessário
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("token", data.token);
     } catch (error) {
       console.error("Falha no login:", error);
     }

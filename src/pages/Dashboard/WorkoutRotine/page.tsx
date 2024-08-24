@@ -21,17 +21,29 @@ export function CreateWorkoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (studentId) {
-      await createWorkoutRoutine({
-        title,
-        observations,
-        active,
-        inactiveOnExpiration,
-        startDate,
-        expirationDate,
-      });
+    console.log("Student ID:", studentId);
 
-      navigate("/dashboard");
+    if (studentId) {
+      try {
+        await createWorkoutRoutine(
+          {
+            title,
+            observations,
+            active,
+            inactiveOnExpiration,
+            startDate,
+            expirationDate,
+          },
+          studentId
+        );
+        navigate("/dashboard");
+      } catch (error) {
+        console.error("Erro ao criar rotina de treino:", error);
+        alert("Ocorreu um erro ao criar a rotina. Tente novamente.");
+      }
+    } else {
+      console.error("ID do estudante não fornecido.");
+      alert("ID do estudante não foi fornecido.");
     }
   };
 
@@ -54,7 +66,7 @@ export function CreateWorkoutPage() {
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 block w-full bg-grayThree p-2 rounded-md"
+              className="mt-1 block w-full bg-transparent border border-grayTwo p-2 rounded-md"
               required
             />
           </div>
@@ -69,7 +81,7 @@ export function CreateWorkoutPage() {
               id="observations"
               value={observations}
               onChange={(e) => setObservations(e.target.value)}
-              className="mt-1 block w-full bg-grayThree p-2 rounded-md"
+              className="mt-1 block w-full bg-transparent border border-grayTwo p-2 rounded-md"
               required
             />
           </div>
@@ -85,7 +97,7 @@ export function CreateWorkoutPage() {
               id="startDate"
               value={startDate}
               onChange={(e) => setStartDate(e.target.value)}
-              className="mt-1 block w-full bg-grayThree p-2 rounded-md"
+              className="mt-1 block w-full bg-transparent border border-grayTwo p-2 rounded-md text-white"
               required
             />
           </div>
@@ -101,7 +113,7 @@ export function CreateWorkoutPage() {
               id="expirationDate"
               value={expirationDate}
               onChange={(e) => setExpirationDate(e.target.value)}
-              className="mt-1 block w-full bg-grayThree p-2 rounded-md"
+              className="mt-1 block w-full bg-transparent border border-grayTwo p-2 rounded-md text-white"
               required
             />
           </div>

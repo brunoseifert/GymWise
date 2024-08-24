@@ -23,25 +23,47 @@ export function DataTableDemo() {
   const [data, setData] = React.useState<Student[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [hasNextPage, setHasNextPage] = React.useState(true);
+  const [totalCount, setTotalCount] = React.useState<number>(0);
+
+  async function fetchData(pageNumber: number) {
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_URL
+        }/students?pageNumber=${pageNumber}&pageSize=10`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await response.json();
+      setData(data.items);
+      setTotalCount(data.totalCount);
+      setHasNextPage(data.hasNextPage);
+    } catch (error) {
+      setError(error instanceof Error ? error.message : String(error));
+    } finally {
+      setLoading(false);
+    }
+  }
 
   React.useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch("http://localhost:5099/api/v1/students");
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await response.json();
-        setData(data.items);
-      } catch (error) {
-        setError(error instanceof Error ? error.message : String(error));
-      } finally {
-        setLoading(false);
-      }
-    }
+    fetchData(currentPage);
+  }, [currentPage]);
 
-    fetchData();
-  }, []);
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (hasNextPage) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -56,7 +78,7 @@ export function DataTableDemo() {
   }
 
   return (
-    <div className="w-full bg-transparent text-white">
+    <div className="w-full bg-transparent text-white container">
       <div className="flex items-center py-4">
         <Input
           placeholder="Search by name..."
@@ -129,12 +151,22 @@ export function DataTableDemo() {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-sm text-gray-400">{data.length} Students</div>
+        <div className="text-sm text-gray-400">{totalCount} Students</div>
         <div className="space-x-2">
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handlePreviousPage}
+            disabled={currentPage === 1}
+          >
             Previous
           </Button>
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleNextPage}
+            disabled={!hasNextPage}
+          >
             Next
           </Button>
         </div>

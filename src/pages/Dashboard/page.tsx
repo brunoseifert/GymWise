@@ -10,10 +10,20 @@ import { Separator } from "@/components/ui/separator";
 import { MenuIcon, LogInIcon, Dumbbell, Bolt, User2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DataTableDemo } from "./components/DataTable";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+  DialogHeader,
+} from "@/components/ui/dialog";
+
+import RegisterStudents from "./register/page";
 
 const DashboardPage = () => {
   return (
-    <div className=" flex flex-col">
+    <div className=" flex flex-col relative">
       <div className="flex py-4 justify-between px-4">
         <div className="flex space-x-4 text-white">
           <Avatar>
@@ -86,15 +96,28 @@ const DashboardPage = () => {
         </div>
       </div>
       <Separator className=" w-full opacity-15" />
-      <div className="flex p-4">
+      <div className="flex justify-between p-4 container">
         <span className="text-primaryPurple text-3xl ">Dashboard</span>
-        <Button
-          variant="outline"
-          className="bg-primaryPurple text-white p-2 pl-4 pr-4 rounded-xl ml-auto"
-        >
-          <a href="/dashboard/register">Cadastrar</a>
-        </Button>
+
+        <Dialog>
+          <DialogTrigger>
+            <Button
+              variant="outline"
+              className="bg-primaryPurple text-white p-2 pl-4 pr-4 rounded-xl ml-auto"
+            >
+              Cadastrar
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[525px]">
+            <DialogHeader>
+              <DialogTitle>Cadastrar novo aluno</DialogTitle>
+              <DialogDescription>Insira os dados dele aqui</DialogDescription>
+            </DialogHeader>
+            <RegisterStudents />
+          </DialogContent>
+        </Dialog>
       </div>
+
       <div className="px-4 ">
         <DataTableDemo />
       </div>
