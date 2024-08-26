@@ -108,7 +108,7 @@ const DashboardPage = () => {
               Cadastrar
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[525px]">
+          <DialogContent className="sm:max-w-[525px] bg-secondaryBlack border-none text-white">
             <DialogHeader>
               <DialogTitle>Cadastrar novo aluno</DialogTitle>
               <DialogDescription>Insira os dados dele aqui</DialogDescription>

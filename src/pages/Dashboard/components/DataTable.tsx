@@ -18,14 +18,23 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Student } from "@/services/studentService";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export function DataTableDemo() {
   const [data, setData] = React.useState<Student[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<string | null>(null);
   const [currentPage, setCurrentPage] = React.useState(1);
-  const [hasNextPage, setHasNextPage] = React.useState(true);
   const [totalCount, setTotalCount] = React.useState<number>(0);
+  const pageSize = 9;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   async function fetchData(pageNumber: number) {
     setLoading(true);
@@ -33,7 +42,7 @@ export function DataTableDemo() {
       const response = await fetch(
         `${
           import.meta.env.VITE_API_URL
-        }/students?pageNumber=${pageNumber}&pageSize=10`
+        }/students?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch data");
@@ -41,7 +50,6 @@ export function DataTableDemo() {
       const data = await response.json();
       setData(data.items);
       setTotalCount(data.totalCount);
-      setHasNextPage(data.hasNextPage);
     } catch (error) {
       setError(error instanceof Error ? error.message : String(error));
     } finally {
@@ -53,15 +61,9 @@ export function DataTableDemo() {
     fetchData(currentPage);
   }, [currentPage]);
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage((prevPage) => prevPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    if (hasNextPage) {
-      setCurrentPage((prevPage) => prevPage + 1);
+  const handlePageChange = (pageNumber: number) => {
+    if (pageNumber >= 1 && pageNumber <= totalPages) {
+      setCurrentPage(pageNumber);
     }
   };
 
@@ -150,27 +152,35 @@ export function DataTableDemo() {
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="text-sm text-gray-400">{totalCount} Students</div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handlePreviousPage}
-            disabled={currentPage === 1}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleNextPage}
-            disabled={!hasNextPage}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <Pagination className="flex items-center justify-end space-x-2 py-4">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              href="#"
+              onClick={() => handlePageChange(currentPage - 1)}
+              className="hover:bg-grayOne hover:text-white"
+            />
+          </PaginationItem>
+          {Array.from({ length: totalPages }, (_, index) => (
+            <PaginationItem key={index}>
+              <PaginationLink
+                href="#"
+                onClick={() => handlePageChange(index + 1)}
+                className={currentPage === index + 1 ? "bg-grayOne" : ""}
+              >
+                {index + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <PaginationNext
+              href="#"
+              onClick={() => handlePageChange(currentPage + 1)}
+              className="hover:bg-grayOne hover:text-white"
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }
