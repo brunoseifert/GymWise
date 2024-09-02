@@ -26,6 +26,13 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import UserProfile from "./UserProfile";
 
 export function DataTableDemo() {
   const [data, setData] = React.useState<Student[]>([]);
@@ -137,13 +144,18 @@ export function DataTableDemo() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>
-                        <a href={`/dashboard/routine?studentId=${student.id}`}>
-                          Criar rotina
-                        </a>
-                      </DropdownMenuLabel>
-                      <DropdownMenuItem>Ver treinos</DropdownMenuItem>
-                      <DropdownMenuItem>View Details</DropdownMenuItem>
+                      <Dialog>
+                        <DialogTrigger className="w-full">
+                          <Button className="p-2 w-full justify-start bg-transparent hover:bg-transparent text-black">
+                            Ver
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[1080px] bg-backgroundBlack border-none text-white">
+                          <DialogHeader></DialogHeader>
+                          <UserProfile student={student} />
+                        </DialogContent>
+                      </Dialog>
+                      <DropdownMenuItem>Deletar Aluno</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>
