@@ -15,7 +15,7 @@ export const createWorkoutRoutine = async (
 ): Promise<void> => {
   try {
     const response: AxiosResponse<void> = await axios.post(
-      `${import.meta.env.VITE_API_URL}/workouts/rotines`,
+      `${import.meta.env.VITE_API_URL}/v1/workouts/rotines`,
       {
         ...workoutData,
         studentId,

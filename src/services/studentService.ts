@@ -27,7 +27,7 @@ export const registerStudent = async (student: Omit<Student, "id">) => {
 
   try {
     const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/students/register`,
+      `${import.meta.env.VITE_API_URL}/v1/students/register`,
       student,
       {
         headers: {
@@ -60,7 +60,7 @@ export const getAllStudents = async (): Promise<StudentsResponse> => {
 
   try {
     const response = await axios.get<StudentsResponse>(
-      `${import.meta.env.VITE_API_URL}/students`,
+      `${import.meta.env.VITE_API_URL}/v1/students`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
