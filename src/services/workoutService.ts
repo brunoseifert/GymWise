@@ -50,7 +50,7 @@ export const getAllWorkouts = async (): Promise<Workout[]> => {
   const token = localStorage.getItem("token");
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/workouts`,
+      `${import.meta.env.VITE_API_URL}/v1/workouts`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -70,7 +70,7 @@ export const getStudentWorkouts = async (
   const token = localStorage.getItem("token");
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/workouts/student/${studentId}`,
+      `${import.meta.env.VITE_API_URL}/v1/workouts/student/${studentId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

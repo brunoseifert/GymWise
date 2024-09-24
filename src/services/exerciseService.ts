@@ -22,7 +22,7 @@ export interface Item {
 export const getAllExercises = async (): Promise<PageApp> => {
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/exercises`
+      `${import.meta.env.VITE_API_URL}/v1/exercises`
     );
     console.log(response.data);
     return response.data;

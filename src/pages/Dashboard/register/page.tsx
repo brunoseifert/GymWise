@@ -30,7 +30,7 @@ const RegisterStudents = () => {
     console.log(adjustedFormData);
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/students/register`,
+        `${import.meta.env.VITE_API_URL}/v1/students/register`,
         {
           method: "POST",
           headers: {

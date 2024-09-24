@@ -49,7 +49,7 @@ export function DataTableDemo() {
       const response = await fetch(
         `${
           import.meta.env.VITE_API_URL
-        }/students?pageNumber=${pageNumber}&pageSize=${pageSize}`
+        }/v1/students?pageNumber=${pageNumber}&pageSize=${pageSize}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch data");
