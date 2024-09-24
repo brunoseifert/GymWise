@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem("token", data.token);
     } catch (error) {
       console.error("Falha no login:", error);
+      throw new Error("Falha no login:");
     }
   };
 
