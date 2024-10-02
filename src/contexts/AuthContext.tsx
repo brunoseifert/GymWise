@@ -6,10 +6,12 @@ import {
   useEffect,
 } from "react";
 import { authenticateUser } from "../services/authService";
+import { getAllStudents } from "@/services/studentService";
 
 interface User {
   id: string;
   email: string;
+  name: string;
 }
 
 interface AuthContextType {
@@ -36,7 +38,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       const data = await authenticateUser(email, password);
-      const userData = { id: data.userId, email: data.email };
+
+      const studentsResponse = await getAllStudents();
+      const studentData = studentsResponse.items.find(
+        (student) => student.email === email
+      );
+
+      if (!studentData) {
+        console.error("Estudante não encontrado com o email:", email);
+        return;
+      }
+
+      const userData = {
+        id: studentData.id,
+        email: studentData.email,
+        name: `${studentData.firstName} ${studentData.lastName}`,
+      };
+      console.log("Dados do usuário:", userData);
+
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("token", data.token);

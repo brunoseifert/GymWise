@@ -33,7 +33,7 @@ const Home: React.FC = () => {
         <Separator className="opacity-15" />
 
         <div className="text-white pt-6 pb-6">
-          <div>{user ? `Olá, ${user.email}` : "Faça login!"}</div>
+          <div>{user ? `Olá, ${user.name}` : "Faça login!"}</div>
           <p className="text-sm font-light">
             <span className="capitalize">{formattedDay}</span> {formattedDate}
           </p>
