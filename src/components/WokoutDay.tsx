@@ -7,14 +7,20 @@ import { formatDate } from "date-fns";
 import { Link } from "react-router-dom";
 import { getStudentWorkouts, Workout } from "@/services/workoutService";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const WorkoutDay = () => {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const studentId = "445c095e-2f3c-4ae8-ae67-95db6fefacff";
-
+  const { user } = useAuth();
   useEffect(() => {
-    getStudentWorkouts(studentId).then((data) => setWorkouts(data));
-  }, []);
+    const fetchWorkouts = async () => {
+      if (!user) return;
+      const studentId = user.id;
+      const studentWorkouts = await getStudentWorkouts(studentId);
+      setWorkouts(studentWorkouts);
+    };
+    fetchWorkouts();
+  }, [user]);
 
   const currentDate = new Date();
   const formattedDay = formatDate(currentDate, "d", {
