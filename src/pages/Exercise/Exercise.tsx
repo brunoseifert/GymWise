@@ -8,14 +8,80 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import YouTube from "react-youtube";
 import { getStudentWorkouts, Workout } from "@/services/workoutService";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ExercisePage = () => {
+  const { user } = useAuth();
   const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const studentId = import.meta.env.VITE_STUDENT_ID as string;
+  const [timer, setTimer] = useState(0);
+  const [isTimerActive, setIsTimerActive] = useState(false);
+  const [completedSets, setCompletedSets] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    getStudentWorkouts(studentId).then((data) => setWorkouts(data));
-  }, [studentId]);
+    const fetchWorkouts = async () => {
+      if (!user) return;
+      const studentId = user.id;
+      const studentWorkouts = await getStudentWorkouts(studentId);
+      setWorkouts(studentWorkouts);
+    };
+    fetchWorkouts();
+  }, [user]);
+
+  //timer
+
+  const startTimer = () => {
+    if (!isTimerActive) {
+      setIsTimerActive(true);
+      setTimer(0);
+    }
+  };
+
+  const stopTimer = () => {
+    setIsTimerActive(false);
+  };
+
+  //cronometro
+
+  useEffect(() => {
+    if (isTimerActive) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev + 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [isTimerActive]);
+
+  //formatar tempo
+
+  const formatTime = (time: number) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(
+      2,
+      "0"
+    )}`;
+  };
+
+  const handleCompleteSet = (setId: string) => {
+    if (!isTimerActive) {
+      alert("Inicie o treino antes de concluir os exercícios.");
+      return;
+    }
+    setCompletedSets((prev) => new Set(prev).add(setId));
+  };
+
+  const handleCompleteWorkout = () => {
+    if (
+      completedSets.size <
+      workouts.reduce((sum, workout) => sum + workout.sets.length, 0)
+    ) {
+      alert("Complete todos os exercícios antes de concluir o treino.");
+      return;
+    }
+    alert("Treino concluído!");
+    completedSets.clear();
+    stopTimer();
+  };
 
   const extractVideoId = (url: string) => {
     const match = url.match(/youtu\.be\/([^&]+)/);
@@ -48,13 +114,25 @@ const ExercisePage = () => {
                 </div>
               </div>
               <Separator className="opacity-15 mt-6 mb-6" />
-              <div className="flex gap-4 mb-6">
-                <Button className="bg-primaryPurple text-white p-2 pl-4 pr-4 rounded-xl">
+              <div className="flex gap-4 mb-6 items-center">
+                <Button
+                  onClick={startTimer}
+                  className="bg-primaryPurple text-white p-2 pl-4 pr-4 rounded-xl"
+                >
                   Iniciar
                 </Button>
-                <Button className="bg-grayOne text-white p-2 rounded-xl">
-                  Concluir Treino
-                </Button>
+                {isTimerActive && (
+                  <Button
+                    onClick={handleCompleteWorkout}
+                    className="text-white p-2 rounded-xl"
+                    variant="conclusion"
+                  >
+                    Concluir Treino
+                  </Button>
+                )}
+                {isTimerActive && (
+                  <div className="text-white text-xl">{formatTime(timer)}</div>
+                )}
               </div>
               <div className="flex flex-col gap-4">
                 {workout.sets.map((set) => (
@@ -84,12 +162,23 @@ const ExercisePage = () => {
                                 </p>
                               </div>
                               <div className="flex items-center justify-between mt-4">
-                                <Button
-                                  className="bg-grayOne text-white w-full"
-                                  variant="outline"
-                                >
-                                  Concluir
-                                </Button>
+                                {completedSets.has(set.id) ? (
+                                  <Button
+                                    className="w-full text-white p-2 rounded-xl"
+                                    onClick={() => handleCompleteSet(set.id)}
+                                    variant="conclusion"
+                                  >
+                                    Exercício Concluído
+                                  </Button>
+                                ) : (
+                                  <Button
+                                    className="bg-grayOne w-full text-white p-2 rounded-xl"
+                                    onClick={() => handleCompleteSet(set.id)}
+                                    variant="conclusion"
+                                  >
+                                    Concluir
+                                  </Button>
+                                )}
                               </div>
                             </div>
                           </CardContent>
