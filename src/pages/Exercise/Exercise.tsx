@@ -9,9 +9,12 @@ import { useEffect, useState } from "react";
 import YouTube from "react-youtube";
 import { getStudentWorkouts, Workout } from "@/services/workoutService";
 import { useAuth } from "@/contexts/AuthContext";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
 
 const ExercisePage = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [timer, setTimer] = useState(0);
   const [isTimerActive, setIsTimerActive] = useState(false);
@@ -64,7 +67,6 @@ const ExercisePage = () => {
 
   const handleCompleteSet = (setId: string) => {
     if (!isTimerActive) {
-      alert("Inicie o treino antes de concluir os exercícios.");
       return;
     }
     setCompletedSets((prev) => new Set(prev).add(setId));
@@ -75,10 +77,19 @@ const ExercisePage = () => {
       completedSets.size <
       workouts.reduce((sum, workout) => sum + workout.sets.length, 0)
     ) {
-      alert("Complete todos os exercícios antes de concluir o treino.");
+      toast({
+        title: "Treino incompleto!",
+        description: "Complete todos os exercícios antes de concluir o treino.",
+        action: <ToastAction altText="Ok">Ok</ToastAction>,
+      });
       return;
     }
-    alert("Treino concluído!");
+    toast({
+      variant: "default",
+      title: "Treino concluído!",
+      description: "Parabéns, você concluiu o treino com sucesso.",
+      action: <ToastAction altText="Ok">Ok</ToastAction>,
+    });
     completedSets.clear();
     stopTimer();
   };
@@ -98,7 +109,13 @@ const ExercisePage = () => {
             </Link>
             <HeaderComponent />
           </div>
-          <img src="" alt="peito" height={300} width={600} />
+
+          <img
+            src="https://www.dicasdetreino.com.br/wp-content/uploads/2017/12/Treino-de-Peito-Criando-Peitorais-Gigantes.jpg"
+            alt="peito"
+            height={300}
+            style={{ objectFit: "cover" }}
+          />
         </div>
 
         {workouts.length > 0 ? (
@@ -162,19 +179,40 @@ const ExercisePage = () => {
                                 </p>
                               </div>
                               <div className="flex items-center justify-between mt-4">
-                                {completedSets.has(set.id) ? (
-                                  <Button
-                                    className="w-full text-white p-2 rounded-xl"
-                                    onClick={() => handleCompleteSet(set.id)}
-                                    variant="conclusion"
-                                  >
-                                    Exercício Concluído
-                                  </Button>
+                                {isTimerActive ? (
+                                  completedSets.has(set.id) ? (
+                                    <Button
+                                      className="w-full text-white p-2 rounded-xl"
+                                      onClick={() => handleCompleteSet(set.id)}
+                                      variant="conclusion"
+                                    >
+                                      Exercício Concluído
+                                    </Button>
+                                  ) : (
+                                    <Button
+                                      className="bg-grayOne w-full text-white p-2 rounded-xl"
+                                      onClick={() => handleCompleteSet(set.id)}
+                                      variant="conclusion"
+                                    >
+                                      Concluir
+                                    </Button>
+                                  )
                                 ) : (
                                   <Button
                                     className="bg-grayOne w-full text-white p-2 rounded-xl"
-                                    onClick={() => handleCompleteSet(set.id)}
                                     variant="conclusion"
+                                    onClick={() => {
+                                      toast({
+                                        title: "Treino não iniciado!",
+                                        description:
+                                          "Inicie o treino para concluir os exercícios.",
+                                        action: (
+                                          <ToastAction altText="Ok">
+                                            Ok
+                                          </ToastAction>
+                                        ),
+                                      });
+                                    }}
                                   >
                                     Concluir
                                   </Button>
