@@ -8,13 +8,14 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { CheckCircle, Circle, EllipsisVertical } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Anamnesis: React.FC = () => {
-    // TODO: Pegar Id do usuário do Contexto
-    // const { user } = useAuth();
+    const { user } = useAuth();
+    
     useEffect(() => {
-        getAnamnesisByStudentId("f7f3ffed-3bee-40f4-8fc0-499193fa3a74").then((data) => setData(data));
-    }, []);
+        getAnamnesisByStudentId(user!.id).then((data) => setData(data));
+    }, [user]);
 
     const [data, setData] = useState<PagedList<AnamnesisType> | undefined>();
 
