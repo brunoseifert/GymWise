@@ -6,8 +6,16 @@ import { Separator } from "@radix-ui/react-separator";
 import { ChevronLeft } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 
 const Assessment: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handleAnamnesis = () => {
+        navigate("/dashboard/assessments/anamnesis");
+    };
+
     return (
         <div className="container flex flex-col">
             <div className="flex items-center justify-between">
@@ -27,7 +35,6 @@ const Assessment: React.FC = () => {
                         <li className="mb-2">
                             <Sheet >
                                 <SheetTrigger className="w-full">
-                                    <Link to="/">
                                         <div className="w-full">
                                             <Card className="bg-secondaryBlack border-grayOne text-white">
                                                 <CardContent className="py-0 flex px-0">
@@ -38,14 +45,13 @@ const Assessment: React.FC = () => {
                                                             </h2>
                                                         </div>
 
-                                                        <Button className="w-full bg-grayOne" variant="outline">
+                                                        <Button onClick={handleAnamnesis} className="w-full bg-grayOne" variant="outline">
                                                             Ver
                                                         </Button>
                                                     </div>
                                                 </CardContent>
                                             </Card>
                                         </div>
-                                    </Link>
                                 </SheetTrigger>
                             </Sheet>
                         </li>
