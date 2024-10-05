@@ -21,7 +21,6 @@ const Home: React.FC = () => {
   const formattedDay = formatDate(currentDate, "EEE", { locale: ptBR });
 
   return (
-    <div>
       <div className="container flex flex-col">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-semibold text-grayThree">
@@ -65,7 +64,6 @@ const Home: React.FC = () => {
         </h4>
         <RatingItem />
       </div>
-    </div>
   );
 };
 
