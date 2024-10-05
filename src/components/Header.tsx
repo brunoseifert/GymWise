@@ -34,6 +34,10 @@ const HeaderComponent = () => {
     navigate("/login"); // Navega para a página de login
   };
 
+  const handleAssessments = () => {
+    navigate("/dashboard/assessments");
+  };
+
   return (
     <div className="flex flex-row justify-end items-center pt-6 pb-6">
       <Sheet>
@@ -89,6 +93,17 @@ const HeaderComponent = () => {
                   >
                     <ListOrderedIcon className="" />
                     Meus Planos
+                  </Button>
+                </SheetClose>
+                <SheetClose>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="w-full justify-start gap-2"
+                    onClick={handleAssessments}
+                  >
+                    <LogOutIcon className="" />
+                    Minhas avaliações
                   </Button>
                 </SheetClose>
                 <SheetClose>
