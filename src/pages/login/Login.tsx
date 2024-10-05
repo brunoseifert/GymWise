@@ -8,9 +8,10 @@ const timeInMsToShowAlert = 3000;
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
+  const [disabledButton, setDisabledButton] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { login } = useAuth(); // Usando o contexto de autenticação
+  const { login } = useAuth(); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,9 +23,11 @@ const LoginPage = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     try {
-      await login(email, password); // Utilizando a função login do contexto
-      navigate("/"); // Redireciona para a página inicial após login bem-sucedido
+      setDisabledButton(true);
+      await login(email, password);
+      navigate("/"); 
     } catch (error) {
+      setDisabledButton(false);
       console.error("Login error:", error);
       setError("Email ou senha inválidos. Tente novamente!")
     }
@@ -86,6 +89,7 @@ const LoginPage = () => {
           </div>
           <button
             type="submit"
+            disabled={disabledButton}
             className="w-full border text-white p-3 rounded-xl font-medium transition-colors hover:bg-primaryPurpleDark"
           >
             Entrar
