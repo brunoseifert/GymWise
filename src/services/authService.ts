@@ -10,11 +10,11 @@ export const authenticateUser = async (email: string, password: string) => {
       }
     );
 
-    const { userId, token } = response.data;
+    const { id, token, userName } = response.data;
 
     localStorage.setItem("token", token);
 
-    return { userId, email, token };
+    return { id, email, token, userName };
   } catch (error) {
     console.error("Erro na autenticação:", error);
     throw error;

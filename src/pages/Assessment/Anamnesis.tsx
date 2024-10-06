@@ -15,7 +15,7 @@ const Anamnesis: React.FC = () => {
     
     useEffect(() => {
         getAnamnesisByStudentId(user!.id).then((data) => setData(data));
-    }, [user]);
+    }, []);
 
     const [data, setData] = useState<PagedList<AnamnesisType> | undefined>();
 
