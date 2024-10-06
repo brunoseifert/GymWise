@@ -8,6 +8,7 @@ import CreateWorkoutPage from "./pages/Dashboard/WorkoutRotine/page";
 import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./contexts/Components/PrivateRoute";
 import Assessment from "./pages/Assessment/Assessment";
+import Anamnesis from "./pages/Assessment/Anamnesis";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/dashboard/routine" element={<CreateWorkoutPage />} />
             <Route path="/dashboard/assessments" element={<Assessment />} />
+            <Route path="/dashboard/assessments/anamnesis" element={<Anamnesis />} />
           </Route>
         </Routes>
       </Router>
