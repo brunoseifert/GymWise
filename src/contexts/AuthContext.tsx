@@ -6,10 +6,12 @@ import {
   useEffect,
 } from "react";
 import { authenticateUser } from "../services/authService";
+import { getAllStudents } from "@/services/studentService";
 
 interface User {
   id: string;
   email: string;
+  name: string;
 }
 
 interface AuthContextType {
@@ -22,26 +24,44 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const storedUser = localStorage.getItem("user");
+  const initialUser = storedUser ? JSON.parse(storedUser) : null;
+
+  const [user, setUser] = useState<User | null>(initialUser);
 
   useEffect(() => {
-    // Tenta carregar o usuário do localStorage quando o componente for montado
-    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-  }, []);
+  }, [storedUser]);
 
   const login = async (email: string, password: string) => {
     try {
       const data = await authenticateUser(email, password);
-      const userData = { id: data.id, email: data.email };
+
+      const studentsResponse = await getAllStudents();
+      const studentData = studentsResponse.items.find(
+        (student) => student.email === email
+      );
+
+      if (!studentData) {
+        console.error("Estudante não encontrado com o email:", email);
+        return;
+      }
+
+      const userData = {
+        id: studentData.id,
+        email: studentData.email,
+        name: `${studentData.firstName} ${studentData.lastName}`,
+      };
+      console.log("Dados do usuário:", userData);
+
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("token", data.token);
     } catch (error) {
-      console.error("Falha no login:", error);
-      throw new Error("Falha no login:");
+      console.error("Login failed:", error);
+      throw new Error("Login failed");
     }
   };
 
