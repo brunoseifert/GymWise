@@ -20,6 +20,7 @@ import {
 import { Separator } from "./ui/separator";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { Notification } from "./Notification";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const HeaderComponent = () => {
   return (
     <div className="flex flex-row justify-end items-center pt-6 pb-6">
       <Sheet>
+        <Notification />
         <SheetTrigger>
           <Button size="icon" variant="outline">
             <MenuIcon className="text-white" />
