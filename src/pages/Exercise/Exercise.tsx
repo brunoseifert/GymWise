@@ -7,7 +7,7 @@ import { ChevronLeft, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import YouTube from "react-youtube";
-import { getStudentWorkouts, Workout } from "@/services/workoutService";
+import { getStudentWorkoutsID, Workout } from "@/services/workoutService";
 import { useAuth } from "@/contexts/AuthContext";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/hooks/use-toast";
@@ -24,7 +24,7 @@ const ExercisePage = () => {
     const fetchWorkouts = async () => {
       if (!user) return;
       const studentId = user.id;
-      const studentWorkouts = await getStudentWorkouts(studentId);
+      const studentWorkouts = await getStudentWorkoutsID(studentId);
       setWorkouts(studentWorkouts);
     };
     fetchWorkouts();
@@ -138,6 +138,7 @@ const ExercisePage = () => {
                 >
                   Iniciar
                 </Button>
+
                 {isTimerActive && (
                   <Button
                     onClick={handleCompleteWorkout}

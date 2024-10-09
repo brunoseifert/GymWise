@@ -64,7 +64,7 @@ export const getAllWorkouts = async (): Promise<Workout[]> => {
   }
 };
 
-export const getStudentWorkouts = async (
+export const getStudentWorkoutsID = async (
   studentId: string
 ): Promise<Workout[]> => {
   const token = localStorage.getItem("token");

@@ -5,7 +5,7 @@ import { Card, CardContent } from "./ui/card";
 import { Sheet, SheetTrigger } from "./ui/sheet";
 import { formatDate } from "date-fns";
 import { Link } from "react-router-dom";
-import { getStudentWorkouts, Workout } from "@/services/workoutService";
+import { getStudentWorkoutsID, Workout } from "@/services/workoutService";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -16,7 +16,7 @@ const WorkoutDay = () => {
     const fetchWorkouts = async () => {
       if (!user) return;
       const studentId = user.id;
-      const studentWorkouts = await getStudentWorkouts(studentId);
+      const studentWorkouts = await getStudentWorkoutsID(studentId);
       setWorkouts(studentWorkouts);
     };
     fetchWorkouts();

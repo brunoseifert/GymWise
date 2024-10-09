@@ -32,7 +32,8 @@ import {
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import UserProfile from "./UserProfile";
+import UserProfile from "../user/UserProfile";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function DataTableDemo() {
   const [data, setData] = React.useState<Student[]>([]);
@@ -73,10 +74,18 @@ export function DataTableDemo() {
       setCurrentPage(pageNumber);
     }
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading)
+    return (
+      <div className="max-h-full flex flex-row items-center justify-between">
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-[250px]" />
+            <Skeleton className="h-4 w-[200px]" />
+          </div>
+        </div>
+      </div>
+    );
 
   if (error) {
     return <div>Error: {error}</div>;

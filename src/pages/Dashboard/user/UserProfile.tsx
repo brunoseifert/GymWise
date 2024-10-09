@@ -1,14 +1,27 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+
 import { Progress } from "@/components/ui/progress";
+
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Student } from "@/services/studentService";
+
+import TableUser from "../components/TableUser";
 
 const UserProfile = ({ student }: { student: Student }) => {
   return (
-    <div>
+    <div className="flex gap-4">
       <aside className=" w-56 flex flex-col bg-secondaryBlack border-2  border-grayOne rounded-lg p-4">
         <div className="flex flex-col items-center gap-4">
           <Avatar className="w-40 h-40">
@@ -48,6 +61,41 @@ const UserProfile = ({ student }: { student: Student }) => {
         </div>
         <Button className="mt-4 w-full bg-primaryPurple">Editar Dados</Button>
       </aside>
+      <Tabs defaultValue="treino" className="w-full">
+        <TabsList className="grid w-full grid-cols-2 bg-secondaryBlack">
+          <TabsTrigger
+            value="treino"
+            className="data-[state=active]:bg-grayOne data-[state=active]:text-white"
+          >
+            Treino
+          </TabsTrigger>
+          <TabsTrigger
+            value="avaliações"
+            className="data-[state=active]:bg-grayOne data-[state=active]:text-white"
+          >
+            Avaliações
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="treino">
+          <Card className="bg-secondaryBlack border-2 border-grayOne">
+            <CardContent className="space-y-2">
+              <TableUser student={student} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="avaliações">
+          <Card className="bg-grayOne">
+            <CardHeader>
+              <CardTitle>Avaliações</CardTitle>
+              <CardDescription></CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-2"></CardContent>
+            <CardFooter>
+              <Button>Criar Avaliações</Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
