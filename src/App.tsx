@@ -9,6 +9,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import PrivateRoute from "./contexts/Components/PrivateRoute";
 import Assessment from "./pages/Assessment/Assessment";
 import Anamnesis from "./pages/Assessment/Anamnesis";
+import AnamnesisStepperForm from "./pages/Assessment/AnamnesisStepperForm";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
             <Route path="/dashboard/routine" element={<CreateWorkoutPage />} />
             <Route path="/dashboard/assessments" element={<Assessment />} />
             <Route path="/dashboard/assessments/anamnesis" element={<Anamnesis />} />
+            <Route path="/dashboard/assessments/anamnesis/form" element={<AnamnesisStepperForm />} />
           </Route>
         </Routes>
       </Router>
