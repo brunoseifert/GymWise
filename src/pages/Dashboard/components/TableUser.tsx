@@ -15,11 +15,24 @@ import {
 import { CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Student } from "@/services/studentService";
+import { Plus, SquarePen, Check, X } from "lucide-react";
+import { getAllExercises, Item } from "@/services/exerciseService";
+
+interface ExtraSet {
+  exercise: string;
+  series: number | null;
+  reps: number | null;
+}
 
 const TableUser = ({ student }: { student: Student }) => {
+  const [exercises, setExercises] = useState<Item[]>([]);
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [extraSets, setExtraSets] = useState<ExtraSet[]>([]);
+  const [newExerciseIndex, setNewExerciseIndex] = useState<number | null>(null);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchWorkouts = async () => {
@@ -38,6 +51,42 @@ const TableUser = ({ student }: { student: Student }) => {
     fetchWorkouts();
   }, [student.id]);
 
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const data = await getAllExercises();
+        setExercises(data.items);
+      } catch (error) {
+        console.error("Erro ao buscar exercícios:", error);
+      }
+    };
+
+    fetchExercises();
+  }, []);
+
+  const handleAddExercise = () => {
+    setExtraSets([...extraSets, { exercise: "", series: null, reps: null }]);
+    setSelectedExercises([...selectedExercises, ""]);
+    setNewExerciseIndex(extraSets.length);
+  };
+
+  const handleEditClick = (index: number) => {
+    setEditingIndex(index);
+    setNewExerciseIndex(null);
+  };
+
+  const handleCancelClick = (index: number) => {
+    setEditingIndex(null);
+    const updatedExtraSets = [...extraSets];
+    updatedExtraSets.splice(index, 1);
+    setExtraSets(updatedExtraSets);
+    setNewExerciseIndex(null);
+  };
+
+  const handleConfirmClick = () => {
+    setEditingIndex(null);
+  };
+
   if (loading)
     return (
       <div className="max-h-full flex flex-row items-center justify-between">
@@ -48,7 +97,6 @@ const TableUser = ({ student }: { student: Student }) => {
 
   return (
     <div>
-      {" "}
       <Suspense fallback={loading}>
         {workouts.length > 0 ? (
           workouts.map((workout) => (
@@ -63,13 +111,13 @@ const TableUser = ({ student }: { student: Student }) => {
                 {workout.title}
               </Label>
 
-              <div className="w-full  gap-2 flex flex-col">
+              <div className="w-full gap-2 flex flex-col">
                 {workout.sets.map((set, index) => (
                   <div
                     key={index}
                     className="flex gap-6 bg-grayOne p-2 rounded-lg"
                   >
-                    <Select>
+                    <Select disabled={editingIndex !== index}>
                       <SelectTrigger className="w-full bg-transparent border-b-[1px] border-grayThree text-white ">
                         <SelectValue
                           className="border-none"
@@ -79,9 +127,14 @@ const TableUser = ({ student }: { student: Student }) => {
                       <SelectContent>
                         <SelectGroup className="border-none">
                           <SelectLabel>Selecione o exercício</SelectLabel>
-                          <SelectItem value="exercise ">
+                          <SelectItem value="exercise">
                             {set.exercise.name}
                           </SelectItem>
+                          {exercises.map((exercise) => (
+                            <SelectItem key={exercise.id} value={exercise.id}>
+                              {exercise.name}
+                            </SelectItem>
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -90,13 +143,103 @@ const TableUser = ({ student }: { student: Student }) => {
                       defaultValue={set.series}
                       placeholder="Séries"
                       className="w-1/3 bg-transparent border-b-[1px] border-grayThree text-white "
+                      disabled={editingIndex !== index}
                     />
                     <Input
                       type="number"
                       defaultValue={set.reps}
                       placeholder="Repetições"
                       className="w-1/3 bg-transparent border-b-[1px] border-grayThree text-white "
+                      disabled={editingIndex !== index}
                     />
+                    {editingIndex === index ? (
+                      <div className="flex items-center gap-2">
+                        <Check
+                          size={30}
+                          className="text-green-500 cursor-pointer"
+                          onClick={handleConfirmClick}
+                        />
+                        <X
+                          size={30}
+                          className="text-red-500 cursor-pointer"
+                          onClick={() => handleCancelClick(index)}
+                        />
+                      </div>
+                    ) : (
+                      <SquarePen
+                        size={40}
+                        className="text-white cursor-pointer"
+                        onClick={() => handleEditClick(index)}
+                      />
+                    )}
+                  </div>
+                ))}
+
+                {/* Adiciona os sets extras dinâmicos */}
+                {extraSets.map((extraSet, index) => (
+                  <div
+                    key={`extra-${index}`}
+                    className="flex gap-6 bg-grayOne p-2 rounded-lg"
+                  >
+                    <Select>
+                      <SelectTrigger className="w-full bg-transparent border-b-[1px] border-grayThree text-white">
+                        <SelectValue
+                          className="border-none"
+                          placeholder="Selecione o exercício"
+                        />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup className="border-none">
+                          <SelectLabel>Selecione o exercício</SelectLabel>
+                          {exercises.map((exercise) => (
+                            <SelectItem key={exercise.id} value={exercise.name}>
+                              {exercise.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
+                    {/* /* Inputs para séries e repetições */}
+                    <Input
+                      type="number"
+                      value={extraSet.series !== null ? extraSet.series : ""}
+                      placeholder="Séries"
+                      className="w-1/3 bg-transparent border-b-[1px] border-grayThree text-white"
+                      onChange={(e) => {
+                        const updatedExtraSets = [...extraSets];
+                        updatedExtraSets[index].series = parseInt(
+                          e.target.value
+                        );
+                        setExtraSets(updatedExtraSets);
+                      }}
+                    />
+                    <Input
+                      type="number"
+                      value={extraSet.reps !== null ? extraSet.reps : ""}
+                      placeholder="Repetições"
+                      className="w-1/3 bg-transparent border-b-[1px] border-grayThree text-white"
+                      onChange={(e) => {
+                        const updatedExtraSets = [...extraSets];
+                        updatedExtraSets[index].reps = parseInt(e.target.value);
+                        setExtraSets(updatedExtraSets);
+                      }}
+                    />
+
+                    {newExerciseIndex === index ? (
+                      <div className="flex items-center gap-2">
+                        <Check
+                          size={30}
+                          className="text-green-500 cursor-pointer"
+                          onClick={() => handleCancelClick(index)}
+                        />
+                        <X
+                          size={30}
+                          className="text-red-500 cursor-pointer"
+                          onClick={() => handleCancelClick(index)}
+                        />
+                      </div>
+                    ) : null}
                   </div>
                 ))}
               </div>
@@ -115,7 +258,11 @@ const TableUser = ({ student }: { student: Student }) => {
             Criar nova rotina
           </Button>
         ) : (
-          <Button className="w-full mt-4 bg-transparent border-[1px] border-grayThree">
+          <Button
+            className="w-full mt-4 bg-transparent border-[1px] border-grayThree hover:bg-grayOne p-6 flex gap-2"
+            onClick={handleAddExercise}
+          >
+            <Plus />
             Adicionar exercícios
           </Button>
         )}
