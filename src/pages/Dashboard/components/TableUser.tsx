@@ -1,5 +1,5 @@
 import { getStudentWorkoutsID, Workout } from "@/services/workoutService";
-import { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { SkeletonCard } from "./Skeleton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Student } from "@/services/studentService";
 import { Plus, SquarePen, Check, X } from "lucide-react";
 import { getAllExercises, Item } from "@/services/exerciseService";
+import { useToast } from "@/hooks/use-toast";
 
 interface ExtraSet {
   exercise: string;
@@ -24,7 +25,8 @@ interface ExtraSet {
   reps: number | null;
 }
 
-const TableUser = ({ student }: { student: Student }) => {
+const TableUser = React.memo(({ student }: { student: Student }) => {
+  const { toast } = useToast();
   const [exercises, setExercises] = useState<Item[]>([]);
   const [workouts, setWorkouts] = useState<Workout[]>([]);
   const [loading, setLoading] = useState(true);
@@ -54,7 +56,16 @@ const TableUser = ({ student }: { student: Student }) => {
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const data = await getAllExercises();
+        const data = await getAllExercises(1, 96, (options) =>
+          toast({
+            ...options,
+            variant: options.variant as
+              | "default"
+              | "destructive"
+              | null
+              | undefined,
+          })
+        );
         setExercises(data.items);
       } catch (error) {
         console.error("Erro ao buscar exercícios:", error);
@@ -62,7 +73,7 @@ const TableUser = ({ student }: { student: Student }) => {
     };
 
     fetchExercises();
-  }, []);
+  }, [toast]);
 
   const handleAddExercise = () => {
     setExtraSets([...extraSets, { exercise: "", series: null, reps: null }]);
@@ -269,6 +280,6 @@ const TableUser = ({ student }: { student: Student }) => {
       </CardFooter>
     </div>
   );
-};
+});
 
 export default TableUser;

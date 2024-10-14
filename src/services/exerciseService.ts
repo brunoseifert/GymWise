@@ -1,4 +1,4 @@
-import axios from "axios";
+import { api } from "./api";
 
 export interface PageApp {
   pageNumber: number;
@@ -21,22 +21,24 @@ export interface Item {
 
 export const getAllExercises = async (
   pageNumber: number = 1,
-  pageSize: number = 96
+  pageSize: number = 96,
+  toast: (options: {
+    title: string;
+    description: string;
+    variant: string;
+  }) => void
 ): Promise<PageApp> => {
   try {
     const token = localStorage.getItem("token");
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/v1/exercises`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          pageNumber: pageNumber,
-          pageSize: pageSize,
-        },
-      }
-    );
+    const response = await api(toast).get("/v1/exercises", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: {
+        pageNumber: pageNumber,
+        pageSize: pageSize,
+      },
+    });
 
     return response.data;
   } catch (error) {
