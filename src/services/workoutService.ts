@@ -79,6 +79,11 @@ export const getStudentWorkoutsID = async (
     );
 
     const data = response.data;
+
+    if (typeof data === "string" && data.trim() === "") {
+      return [];
+    }
+
     return Array.isArray(data) ? data : [data];
   } catch (error) {
     console.error("Erro ao buscar treinos do aluno:", error);

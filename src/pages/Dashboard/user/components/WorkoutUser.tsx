@@ -1,6 +1,6 @@
 import { getStudentWorkoutsID, Workout } from "@/services/workoutService";
 import React, { Suspense, useEffect, useState } from "react";
-import { SkeletonCard } from "./Skeleton";
+import { SkeletonCard } from "../../components/Skeleton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Student } from "@/services/studentService";
 import { Plus, SquarePen, Check, X } from "lucide-react";
@@ -253,31 +252,25 @@ const TableUser = React.memo(({ student }: { student: Student }) => {
                     ) : null}
                   </div>
                 ))}
+                <Button
+                  className="w-full mt-4 bg-transparent border-[1px] border-grayThree hover:bg-grayOne p-6 flex gap-2"
+                  onClick={handleAddExercise}
+                >
+                  <Plus />
+                  Adicionar exercícios
+                </Button>
               </div>
             </div>
           ))
         ) : (
           <div className="space-y-1">
             <Label htmlFor="name">Nome da rotina</Label>
-            <Input id="name" placeholder="Ex: Treino A, B, etc." />
+            <Button onClick={() => console.log("Criar nova rotina")}>
+              Criar nova rotina
+            </Button>
           </div>
         )}
       </Suspense>
-      <CardFooter>
-        {workouts.length === 0 ? (
-          <Button onClick={() => console.log("Criar nova rotina")}>
-            Criar nova rotina
-          </Button>
-        ) : (
-          <Button
-            className="w-full mt-4 bg-transparent border-[1px] border-grayThree hover:bg-grayOne p-6 flex gap-2"
-            onClick={handleAddExercise}
-          >
-            <Plus />
-            Adicionar exercícios
-          </Button>
-        )}
-      </CardFooter>
     </div>
   );
 });

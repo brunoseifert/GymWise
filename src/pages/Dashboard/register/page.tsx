@@ -55,7 +55,7 @@ const RegisterStudents = () => {
   return (
     <div className="flex-col items-center justify-center md:grid lg:px-0">
       <div className="mx-auto flex w-full flex-col justify-center space-y-6 ">
-        <div className="m-4 grid gap-6">
+        <div className="m-4 grid gap-6 text-grayOne">
           <form onSubmit={handleSubmit}>
             <div className="grid gap-2">
               <div className="flex gap-1">
