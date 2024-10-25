@@ -21,11 +21,20 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/exercises" element={<ExercisePage />} />
             <Route path="/rating" element={<RatingPage />} />
+          </Route>
+
+          <Route element={<PrivateRoute role="PersonalTrainer" />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/dashboard/routine" element={<CreateWorkoutPage />} />
             <Route path="/dashboard/assessments" element={<Assessment />} />
-            <Route path="/dashboard/assessments/anamnesis" element={<Anamnesis />} />
-            <Route path="/dashboard/assessments/anamnesis/form" element={<AnamnesisStepperForm />} />
+            <Route
+              path="/dashboard/assessments/anamnesis"
+              element={<Anamnesis />}
+            />
+            <Route
+              path="/dashboard/assessments/anamnesis/form"
+              element={<AnamnesisStepperForm />}
+            />
           </Route>
         </Routes>
       </Router>

@@ -24,15 +24,17 @@ import { Notification } from "./Notification";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth(); // Utilize o contexto de autenticação
+  const { user, logout } = useAuth();
+
+  console.log("Role:", user?.role);
 
   const handleLogout = () => {
-    logout(); // Chama a função de logout do contexto
-    navigate("/login"); // Navega para a página de login
+    logout();
+    navigate("/login");
   };
 
   const handleLogin = () => {
-    navigate("/login"); // Navega para a página de login
+    navigate("/login");
   };
 
   const handleAssessments = () => {
@@ -143,6 +145,17 @@ const HeaderComponent = () => {
               </SheetClose>
             )}
           </div>
+
+          {user && user.role?.includes("PersonalTrainer") && (
+            <a href="/dashboard">
+              <Button
+                variant="destructive"
+                className="w-full absolute bottom-5  rounded-none"
+              >
+                Acessar Dashboard
+              </Button>
+            </a>
+          )}
         </SheetContent>
       </Sheet>
     </div>

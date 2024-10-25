@@ -6,11 +6,14 @@ import {
   useEffect,
 } from "react";
 import { authenticateUser } from "../services/authService";
+import { jwtDecode } from "jwt-decode";
 
 interface User {
   id: string;
   email: string;
   userName: string;
+  role: string;
+  claims: string;
 }
 
 interface AuthContextType {
@@ -37,9 +40,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const login = async (email: string, password: string) => {
     try {
       const data = await authenticateUser(email, password);
-      setUser(data);
-      localStorage.setItem("user", JSON.stringify(data));
-      localStorage.setItem("token", data.token);
+      const { token } = data;
+      const jwtDecoded: User = jwtDecode(token);
+      console.log("Token decodificado:", jwtDecoded);
+
+      const user: User = {
+        id: data.id,
+        email: jwtDecoded.email,
+        userName: data.userName,
+        role: jwtDecoded.role,
+        claims: jwtDecoded.claims,
+      };
+
+      setUser(user);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
     } catch (error) {
       console.error("Login failed:", error);
       throw new Error("Login failed");

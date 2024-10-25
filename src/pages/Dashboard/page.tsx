@@ -50,45 +50,16 @@ const DashboardPage = () => {
               <Separator className=" w-full opacity-15" />
               <div className="flex flex-col  text-white p-6">
                 <SheetClose>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="w-full justify-start gap-2 bg-[#26272B] px-2"
-                  >
-                    <LogInIcon className="" />
-                    Login
-                  </Button>
-                </SheetClose>
-                <SheetClose>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="w-full justify-start gap-2 px-2"
-                  >
-                    <User2Icon className="" />
-                    Alunos
-                  </Button>
-                </SheetClose>
-                <SheetClose>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="w-full justify-start gap-2 px-2"
-                  >
-                    <Dumbbell className="" />
-                    Exercícios
-                  </Button>
-                </SheetClose>
-
-                <SheetClose>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="w-full justify-start gap-2 px-2"
-                  >
-                    <Bolt className="" />
-                    Configurações
-                  </Button>
+                  <a href="/">
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      className="w-full justify-start gap-2 bg-[#26272B] px-2"
+                    >
+                      <LogInIcon className="" />
+                      Sair
+                    </Button>
+                  </a>
                 </SheetClose>
               </div>
             </SheetContent>
